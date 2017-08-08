@@ -5,6 +5,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.ks.rpg.handlers.GameStateManager;
+import com.ks.rpg.handlers.InputManager;
+import com.ks.rpg.handlers.InputProcessor;
+import com.ks.rpg.handlers.ResourceManager;
 
 public class Game implements ApplicationListener{
 
@@ -22,7 +25,15 @@ public class Game implements ApplicationListener{
 	
 	private GameStateManager gsm;
 	
+	public static ResourceManager res;
+	
 	public void create() {
+		
+		Gdx.input.setInputProcessor(new InputProcessor());
+		res = new ResourceManager();
+		
+		//load textures
+		res.loadTexture("resources/sprites/ahaego.png", "player");
 		
 		sb = new SpriteBatch();
 		cam = new OrthographicCamera();
@@ -40,7 +51,13 @@ public class Game implements ApplicationListener{
 			accum -= STEP;
 			gsm.update(STEP);
 			gsm.render();
+			InputManager.update();
 		}
+		
+		sb.setProjectionMatrix(hudCam.combined);
+		sb.begin();
+		sb.draw(res.getTexture("player"), 0, 0);
+		sb.end();
 		
 	}
 	
